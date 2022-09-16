@@ -122,6 +122,12 @@ namespace HostiEnCasa.App.Persistencia
             return null;
 
         }
+
+        int IRepositorioPaciente.AsignarMedicoDirecto(Paciente paciente)
+        {
+            _appContext.Pacientes.Update(paciente);
+            return _appContext.SaveChanges();
+        }
         
     }
 }

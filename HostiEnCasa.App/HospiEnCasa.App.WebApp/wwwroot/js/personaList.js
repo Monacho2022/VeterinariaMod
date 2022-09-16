@@ -194,6 +194,38 @@ $().ready(function(){
                 });
                 
             case "Medico" : 
+
+                var medico = {
+                    "NoDocumento": $("#noDocumentoR").val(), 
+                    "Nombre": $("#nombreR").val(), 
+                    "Apellidos": $("#apellidoR").val(), 
+                    "NumeroTelefono": $("#telefonoR").val(), 
+                    "Discriminator": $("#discriminadorR").val(), 
+                    "Genero": genero,
+                    "Especialidad": $("#especialidad").val(), 
+                    "Codigo": $("#codigo").val(), 
+                    "RegistroRethus": $("#rethus").val()
+                }
+        
+                $.ajax({
+                    type: "POST",
+                    url: "/GestionPersonas/List?handler=CreateMedico",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "html",
+                    headers: {
+                        "RequestVerificationToken": $('input:hidden[name="__RequestVerificationToken"]').val()
+                    },
+                    data: JSON.stringify(medico),
+                })
+                .done(function (result) {
+                    console.log(result);
+                    alert(result);                    
+                    location.reload();
+                })
+                .fail(function (error) {
+                    console.log(result);
+                    alert(error);
+                });
                 
             case "Enfermera" : 
                 
@@ -214,6 +246,30 @@ $().ready(function(){
                 "RequestVerificationToken": $('input:hidden[name="__RequestVerificationToken"]').val()
             },
             data: { "Id" : $("#idPersonaEliminar").val(), "TipoPersona" : $("#idTipoPersonaEliminar").val()},
+        })
+        .done(function (result) {
+            console.log(result);
+            alert(result);                    
+            location.reload();
+        })
+        .fail(function (error) {
+            console.log(error);
+            alert("Código: " + error.status + ", Error: " + error.responseText);
+        });
+
+    });
+
+    $("#btnAsignarMedico").click(function(){
+       
+        $.ajax({
+            type: "POST",
+            url: "/GestionPersonas/List?handler=AsignarMedico",
+            contentType: "application/x-www-form-urlencoded; charset=utf-8",
+            dataType: "html",
+            headers: {
+                "RequestVerificationToken": $('input:hidden[name="__RequestVerificationToken"]').val()
+            },
+            data: { "IdPaciente" : $("#IdPaciente").val(), "IdMedico" : $("#IdMedico").val()},
         })
         .done(function (result) {
             console.log(result);

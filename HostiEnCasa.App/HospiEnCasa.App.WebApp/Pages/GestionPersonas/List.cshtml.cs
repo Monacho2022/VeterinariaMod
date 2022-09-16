@@ -19,6 +19,8 @@ namespace HospiEnCasa.App.WebApp
         public List<Medico> listadoMedicos { get; set;}
         public string mensaje;
 
+        //protected List();
+
         /*
         public List(){
             //Validar el rol que tenga y determinar si puede ver la página o no
@@ -96,6 +98,19 @@ namespace HospiEnCasa.App.WebApp
             }
         }
 
+        public IActionResult OnPostCreateMedico([FromBody]Medico medico){
+
+            //Validar el objeto que reciben via ajax
+
+            var result = _repositorioMedico.AddMedico(medico);
+
+            if( result > 0){
+                return Content("Se inserto el médico con exito");
+            }else{
+                return Content("No se logro insertar el médico");
+            }
+        }
+
         public IActionResult OnPostDelete(string Id, string TipoPersona){
             
             if(TipoPersona == "Persona"){
@@ -142,8 +157,31 @@ namespace HospiEnCasa.App.WebApp
                 
             }
 
-            return Content("No existe un tipo de persona asociada");
+            return Content("No existe un tipo de persona asociada");            
             
+        }
+
+        public IActionResult OnPostAsignarMedico(string IdPaciente, string IdMedico){
+
+            //Validar el objeto que reciben via ajax
+
+            var medico = _repositorioMedico.GetMedico( Int32.Parse(IdMedico) );
+            var paciente = _repositorioPaciente.GetPaciente( Int32.Parse(IdPaciente) );
+
+            if(paciente != null && medico != null){
+
+                paciente.Medico = medico;
+
+                var result = _repositorioPaciente.AsignarMedicoDirecto(paciente);
+
+                if( result > 0){
+                    return Content("Se asignó el médico con exito");
+                }else{
+                    return Content("No se logro asignar el médico");
+                }
+            }else{
+                return Content("No existe el médico o paciente");
+            }
             
         }
 
