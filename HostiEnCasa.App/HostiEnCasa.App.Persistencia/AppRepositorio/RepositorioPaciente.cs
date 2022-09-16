@@ -26,17 +26,15 @@ namespace HostiEnCasa.App.Persistencia
         int IRepositorioPaciente.AddPaciente(Paciente paciente)
         {
             var pacienteAdicionado = _appContext.Pacientes.Add(paciente);
+
             return _appContext.SaveChanges();
 
         }
 
-        void IRepositorioPaciente.DeletePaciente(int idPaciente)
+        int IRepositorioPaciente.DeletePaciente(Paciente paciente)
         {
-            var pacienteEncontrado = _appContext.Pacientes.FirstOrDefault(p => p.Id == idPaciente);
-            if (pacienteEncontrado == null)
-                return;
-            _appContext.Pacientes.Remove(pacienteEncontrado);
-            _appContext.SaveChanges();
+            _appContext.Pacientes.Remove(paciente);
+            return _appContext.SaveChanges();
         }
 
         IEnumerable<Paciente> IRepositorioPaciente.GetAllPacientes()
@@ -46,7 +44,7 @@ namespace HostiEnCasa.App.Persistencia
 
         Paciente IRepositorioPaciente.GetPaciente(int idPaciente)
         {
-            return _appContext.Pacientes.FirstOrDefault(p => p.Id == idPaciente);
+            return _appContext.Pacientes.Include( p => p.SignosVitales ).FirstOrDefault(p => p.Id == idPaciente);
         }
 
         int IRepositorioPaciente.UpdatePaciente(Paciente paciente)

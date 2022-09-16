@@ -1,24 +1,38 @@
 $().ready(function(){
     
-    /*
-    $("#eliminar").click(function(){
-        $('#modalEliminar').modal('show');
-    });
-    
-    $("#editar").click(function(){
-        $('#modalEditar').modal('show');
-    });
-    */
-
-    $("#personas").change(function(){
-        alert("Seleccionó el elemento" + $("#personas").val())
-    });
-
     $("#crearPersona").click(function(){
         $("#modalRegistrar").modal('show');
     });
 
-    $(document).on('click', '#tablePersonas tbody tr td a.btn.btn-secondary', function(){
+    $(document).on('click', '#tablePersonas tbody tr td a.btn.bg-warning', function(){
+        
+        $(this).parent().parent().find('td').each(function(index){
+            switch(index){
+                case 0:
+                    $('#IdPaciente').val($(this).text());
+                    break;  
+                case 1:
+                    $('#nombrePaciente').val($(this).text());
+                    break;                
+            }
+        });
+        
+        $('#modalMedico').modal('show');
+    });
+
+    $(document).on('click', '#tablePersonas tbody tr td a.btn.bg-danger', function(){
+        
+        $(this).parent().parent().find('td').each(function(index){
+            switch(index){
+                case 0:
+                    $('#idPersonaEliminar').val($(this).text());
+                    break;  
+                case 5:
+                    $('#idTipoPersonaEliminar').val($(this).text());
+                    break;                
+            }
+        });
+        
         $('#modalEliminar').modal('show');
     });
 
@@ -47,65 +61,8 @@ $().ready(function(){
 
     });
 
-    $("#btnRegistrar").click(function(){
-
-        //Aqui debe haber un proceso de validación
-
-        var genero = ($("#generoR").val() == "Femenino" ? 0 : 1);
-
-        var persona = {
-            "NoDocumento": $("#noDocumentoR").val(), 
-            "Nombre": $("#nombreR").val(), 
-            "Apellidos": $("#apellidoR").val(), 
-            "NumeroTelefono": $("#telefonoR").val(), 
-            "Discriminator": $("#discriminadorR").val(), 
-            "Genero": genero 
-        }
-
-        $.ajax({
-            type: "POST",
-            url: "/GestionPersonas/List?handler=Create",
-            contentType: "application/json; charset=utf-8",
-            dataType: "html",
-            headers: {
-                "RequestVerificationToken": $('input:hidden[name="__RequestVerificationToken"]').val()
-            },
-            data: JSON.stringify(persona),
-        })
-        .done(function (result) {
-            alert(result);
-            console.log(result);
-            location.reload();
-        })
-        .fail(function (error) {
-            console.log(result);
-            alert(error);
-        });
-
-    });
-
     $("#btnActualizar").click(function(){
         //Validar datos
-
-        /* Enviar petición AJAX datos crudos*/
-        /*
-        $.ajax({
-            type: "POST",
-            url: "/GestionPersonas/List?handler=Update",
-            contentType: "application/html; charset=utf-8",
-            dataType: "html",
-            headers: {
-                "RequestVerificationToken": $('input:hidden[name="__RequestVerificationToken"]').val()
-            },
-            data: $('#formEditar').serialize(),
-        })
-        .done(function (result) {
-            alert(result);
-        })
-        .fail(function (error) {
-            alert(error);
-        });
-        */
 
         var genero = ($("#genero").val() == "Femenino" ? 0 : 1);
 
@@ -136,6 +93,136 @@ $().ready(function(){
         .fail(function (error) {
             console.log(result);
             alert(error);
+        });
+
+    });
+
+    $("#discriminadorR").change( function() {
+        
+        $("#panelPaciente").hide();
+        $("#panelMedico").hide();
+        $("#panelEnfermera").hide();
+        $("#panelFamiliar").hide();
+
+        switch( $("#discriminadorR").val() ){
+            case "Paciente" : 
+                $("#panelPaciente").show();
+                break;
+            case "Medico" : 
+                $("#panelMedico").show();
+                break;
+            case "Enfermera" : 
+                $("#panelEnfermera").show();
+                break;
+            case "FamiliarDesignado" : 
+                $("#panelFamiliar").show();
+                break;
+        }
+        
+    });
+
+    $("#btnRegistrar").click(function(){
+
+        //Validar los datos antes de enviarlos
+        var genero = ($("#generoR").val() == "Femenino" ? 0 : 1);
+
+        switch( $("#discriminadorR").val() ){
+            case "Persona" : 
+                
+                var persona = {
+                    "NoDocumento": $("#noDocumentoR").val(), 
+                    "Nombre": $("#nombreR").val(), 
+                    "Apellidos": $("#apellidoR").val(), 
+                    "NumeroTelefono": $("#telefonoR").val(), 
+                    "Discriminator": $("#discriminadorR").val(), 
+                    "Genero": genero 
+                }
+        
+                $.ajax({
+                    type: "POST",
+                    url: "/GestionPersonas/List?handler=Create",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "html",
+                    headers: {
+                        "RequestVerificationToken": $('input:hidden[name="__RequestVerificationToken"]').val()
+                    },
+                    data: JSON.stringify(persona),
+                })
+                .done(function (result) {
+                    console.log(result);
+                    alert(result);                    
+                    location.reload();
+                })
+                .fail(function (error) {
+                    console.log(result);
+                    alert(error);
+                });
+
+            case "Paciente" : 
+
+                var paciente = {
+                    "NoDocumento": $("#noDocumentoR").val(), 
+                    "Nombre": $("#nombreR").val(), 
+                    "Apellidos": $("#apellidoR").val(), 
+                    "NumeroTelefono": $("#telefonoR").val(), 
+                    "Discriminator": $("#discriminadorR").val(), 
+                    "Genero": genero,
+                    "Direccion": $("#direccion").val(), 
+                    "Latitud": $("#latitud").val(), 
+                    "Longitud": $("#longitud").val(),
+                    "Ciudad": $("#ciudad").val()
+                }
+        
+                $.ajax({
+                    type: "POST",
+                    url: "/GestionPersonas/List?handler=CreatePaciente",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "html",
+                    headers: {
+                        "RequestVerificationToken": $('input:hidden[name="__RequestVerificationToken"]').val()
+                    },
+                    data: JSON.stringify(paciente),
+                })
+                .done(function (result) {
+                    console.log(result);
+                    alert(result);                    
+                    location.reload();
+                })
+                .fail(function (error) {
+                    console.log(result);
+                    alert(error);
+                });
+                
+            case "Medico" : 
+                
+            case "Enfermera" : 
+                
+            case "FamiliarDesignado" : 
+                
+        }
+
+    });
+
+    $("#btnEliminar").click(function(){
+       
+        $.ajax({
+            type: "POST",
+            url: "/GestionPersonas/List?handler=Delete",
+            contentType: "application/x-www-form-urlencoded; charset=utf-8",
+            dataType: "html",
+            headers: {
+                "RequestVerificationToken": $('input:hidden[name="__RequestVerificationToken"]').val()
+            },
+            data: { "Id" : $("#idPersonaEliminar").val(), "TipoPersona" : $("#idTipoPersonaEliminar").val()},
+        })
+        .done(function (result) {
+            console.log(result);
+            alert(result);                    
+            location.reload();
+        })
+        .fail(function (error) {
+            console.log(error);
+            alert("Código: " + error.status + ", Error: " + error.responseText);
         });
 
     });

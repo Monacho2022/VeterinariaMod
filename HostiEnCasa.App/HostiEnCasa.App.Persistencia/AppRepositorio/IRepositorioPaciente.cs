@@ -10,7 +10,7 @@ namespace HostiEnCasa.App.Persistencia
         IEnumerable<Paciente> GetAllPacientes();
         int AddPaciente(Paciente paciente);
         int UpdatePaciente(Paciente paciente);
-        void DeletePaciente(int idPaciente);    
+        int DeletePaciente(Paciente paciente);
         Paciente GetPaciente(int idPaciente);
         Medico AsignarMedico(int idPaciente, int idMedico);
         List<Paciente> GetPacienteSignoFrecuencia();

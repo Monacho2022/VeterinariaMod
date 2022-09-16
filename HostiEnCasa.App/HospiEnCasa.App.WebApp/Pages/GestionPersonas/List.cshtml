@@ -7,10 +7,10 @@
 }
 <div class="container bg-white border border-secondary rounded-25">
     <div class="row">
-        <div class="col-md-2 col-sm-12">
+        <div class="col-md-1 col-sm-12">
 
         </div>
-        <div class="col-md-8 col-sm-12">
+        <div class="col-md-10 col-sm-12">
             <br>
             <br>
             @{
@@ -24,19 +24,9 @@
             <br>
             <h1>Crear personas</h1>
             <br>
-            <a class="btn btn-primary" id="crearPersona">
+            <a class="btn btn-primary text-white" id="crearPersona">
                 <i class="far fa-edit"></i>Crear Persona
             </a>
-            <div class="form-group">
-                <label for="personas">Listado de personas</label>
-                <select class="form-control" id="personas" name="personas">
-                    <option value="" selected="selected">Seleccione...</option>
-                    @foreach (var persona in Model.listadoPersonas)
-                    {
-                      <option value="@persona.Id">@persona.Nombre @persona.Apellidos</option>
-                    }                   
-                </select>
-            </div>
             <br>
             <br>
             <h1>Listado de personas</h1>            
@@ -67,11 +57,14 @@
                                     <i class="far fa-edit"></i>Editar
                                 </a>
                                 -->
-                                <a class="btn btn-primary" id="editar">
-                                    <i class="far fa-edit"></i>Editar
+                                <a class="btn btn-primary btn-block text-white">
+                                    <i class="far fa-edit"></i> Editar
                                 </a>
-                                <a class="btn btn-secondary">
-                                    <i class="far fa-remove"></i>Eliminar
+                                <a class="btn bg-danger btn-block text-white">
+                                    <i class="fas fa-trash-alt"></i> Eliminar
+                                </a>
+                                <a class="btn bg-warning btn-block">
+                                    <i class="fas fa-medkit"></i> Asignar Médico
                                 </a>
                             </td>
                         </tr>
@@ -81,7 +74,7 @@
             <br>
             <br>
         </div>
-        <div class="col-md-2 col-sm-12">
+        <div class="col-md-1 col-sm-12">
 
         </div>
     </div>
@@ -92,16 +85,18 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Eliminación de usuarios</h5>
+        <h5 class="modal-title">Eliminar persona</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
         <p>¿Desea eliminar la persona?</p>
+        <input type="hidden" name="idPersonaEliminar" id="idPersonaEliminar">
+        <input type="hidden" name="idTipoPersonaEliminar" id="idTipoPersonaEliminar">
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary">Si</button>
+        <button type="button" class="btn btn-primary" id="btnEliminar">Si</button>
         <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
       </div>
     </div>
@@ -203,7 +198,7 @@
                             </select>
                         </div> 
                         <div class="form-group">
-                            <label for="discriminador">Discriminador</label>
+                            <label for="discriminador">Tipo de persona</label>
                             <select class="form-control" id="discriminadorR" name="discriminadorR">
                                 <option value="" selected="selected">Seleccione...</option>
                                 <option value="Persona">Persona Natural</option>
@@ -212,7 +207,64 @@
                                 <option value="Enfermera">Enfermera</option>
                                 <option value="FamiliarDesignado">Familiar Designado</option>
                             </select>
-                        </div>                                                               
+                        </div>
+                        <hr>
+                        <div id="panelPaciente" style="display: none;" >
+                          <h4>Datos adicionales del paciente</h4>
+                          <div class="form-group">
+                            <label for="direccion">Dirección de residencia</label>
+                            <input type="text" class="form-control" id="direccion" name="direccion" placeholder="Digite su dirección de residencia">
+                          </div>
+                          <div class="form-group">
+                            <label for="latitud">Coordenadas de latidud</label>
+                            <input type="number" class="form-control" id="latitud" name="latitud" placeholder="Digite su la latitud de su dirección de residencia">
+                          </div>
+                          <div class="form-group">  
+                            <label for="longitud">Coordenadas de longitud</label>
+                            <input type="number" class="form-control" id="longitud" name="longitud" placeholder="Digite su la longitud de su dirección de residencia">
+                          </div>
+                          <div class="form-group">  
+                            <label for="ciudad">Ciudad de residencia</label>
+                            <input type="text" class="form-control" id="ciudad" name="ciudad" placeholder="Digite su ciudad de residencia">
+                          </div>
+                        </div>
+                        <div id="panelMedico" style="display: none;" >
+                          <h4>Datos adicionales del médico</h4>
+                          <div class="form-group">
+                            <label for="especialidad">Especialidad</label>
+                            <input type="text" class="form-control" id="especialidad" name="especialidad" placeholder="Digite la especialidad">
+                          </div>
+                          <div class="form-group">  
+                            <label for="codigo">Código</label>
+                            <input type="text" class="form-control" id="codigo" name="codigo" placeholder="Digite el código del médico">
+                          </div>
+                          <div class="form-group">  
+                            <label for="rethus">Registro Rethus</label>
+                            <input type="text" class="form-control" id="rethus" name="rethus" placeholder="Digite el registro rethus">
+                          </div>
+                        </div>
+                        <div id="panelEnfermera" style="display: none;" >
+                          <h4>Datos adicionales de la enfermera</h4>
+                          <div class="form-group">
+                            <label for="tarjetaProfesional">Tarjeta Profesional</label>
+                            <input type="text" class="form-control" id="tarjetaProfesional" name="tarjetaProfesional" placeholder="Digite el número de tarjeta profesional">
+                          </div>
+                          <div class="form-group">  
+                            <label for="horasLab">Hora laboralres disponibles</label>
+                            <input type="number" class="form-control" id="horasLab" name="horasLab" placeholder="Digite las horas laborales disponibles">
+                          </div>
+                        </div>   
+                        <div id="panelFamiliar" style="display: none;" >
+                          <h4>Datos adicionales del familiar encargado</h4>
+                          <div class="form-group">
+                            <label for="parentesco">Parentesco</label>
+                            <input type="text" class="form-control" id="parentesco" name="parentesco" placeholder="Digite el parentesco del familiar">
+                          </div>
+                          <div class="form-group">  
+                            <label for="correo">Correo electrónico</label>
+                            <input type="email" class="form-control" id="correo" name="correo" placeholder="Digite el correo electrónico">
+                          </div>
+                        </div>                                                                
                     </form>
                 </div>
             </div>
@@ -220,6 +272,52 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" id="btnRegistrar">Registrar</button>
+        <button type="reset" class="btn btn-secondary">Limpiar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Asignar Medico -->
+<div class="modal" tabindex="-1" role="dialog" id="modalMedico">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Asignar medico</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <form method="post" action="" id="formEditar">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" id="IdPaciente" name="IdPaciente">
+                        <div class="form-group">
+                            <label for="nombre">Nombres</label>
+                            <input type="text" class="form-control" id="nombrePaciente" name="nombrePaciente" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="genero">Listado de medicos</label>
+                            <select class="form-control" id="idMedico" name="idMedico">
+                                <option value="" selected="selected">Seleccione...</option>
+                                @foreach (var medico in Model.listadoMedicos)
+                                {
+                                  <option value="@medico.Id">@medico.Nombre @medico.Apellidos</option>  
+                                }                                
+                            </select>
+                        </div>                                                                
+                    </form>
+                    <br>
+                    <br>
+                </div>
+            </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" id="btnAsignarMedico">Asignar Medico</button>
         <button type="reset" class="btn btn-secondary">Limpiar</button>
       </div>
     </div>

@@ -18,10 +18,6 @@ namespace HospiEnCasa.App.WebApp
 
         public void OnGet()
         {
-            var paciente = _pacienteRepository.GetPacienteAll(2);
-            if (paciente != null)
-                Console.WriteLine(paciente.SignosVitales);
-
             listadoPersonas = new List<Persona>();
             listadoPersonas = _personaRepository.ObtenerTodo();
         }
