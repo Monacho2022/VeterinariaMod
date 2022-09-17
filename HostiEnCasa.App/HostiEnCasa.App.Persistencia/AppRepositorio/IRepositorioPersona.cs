@@ -8,11 +8,14 @@ namespace HostiEnCasa.App.Persistencia
     public interface IRepositorioPersona
     {
         IEnumerable<Persona> GetAllPersonas();
-        Persona AddPersona(Persona Persona);
-        Persona UpdatePersona(Persona Persona);
-        void DeletePersona(int idPersona);    
+        int AddPersona(Persona persona);
+        Persona UpdatePersona(Persona persona);
+        int DeletePersona(int idPersona);    
         Persona GetPersona(int idPersona);        
-
+        List<Persona> GetAllPersonasList();
+        Persona GetPersonaFind(int idPersona);
+        List<Persona> GetAllPersonasByGender(Genero genero, string tipoPersona);
+        int UpdatePersonaFull(Persona persona);
     }
 
 }

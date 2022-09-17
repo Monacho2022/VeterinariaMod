@@ -22,21 +22,20 @@ namespace HostiEnCasa.App.Persistencia
         }
 
 
-        Persona IRepositorioPersona.AddPersona(Persona Persona)
+        int IRepositorioPersona.AddPersona(Persona persona)
         {
-            var PersonaAdicionado = _appContext.Personas.Add(Persona);
-            _appContext.SaveChanges();
-            return PersonaAdicionado.Entity;
-
+            var PersonaAdicionado = _appContext.Personas.Add(persona);
+            return _appContext.SaveChanges();
         }
 
-        void IRepositorioPersona.DeletePersona(int idPersona)
+        int IRepositorioPersona.DeletePersona(int idPersona)
         {
             var PersonaEncontrado = _appContext.Personas.FirstOrDefault(p => p.Id == idPersona);
             if (PersonaEncontrado == null)
-                return;
+                return 0;
+
             _appContext.Personas.Remove(PersonaEncontrado);
-            _appContext.SaveChanges();
+            return _appContext.SaveChanges();
         }
 
         IEnumerable<Persona> IRepositorioPersona.GetAllPersonas()
@@ -44,25 +43,45 @@ namespace HostiEnCasa.App.Persistencia
             return _appContext.Personas;
         }
 
+        List<Persona> IRepositorioPersona.GetAllPersonasList()
+        {
+            return _appContext.Personas.ToList();
+        }
+
         Persona IRepositorioPersona.GetPersona(int idPersona)
         {
             return _appContext.Personas.FirstOrDefault(p => p.Id == idPersona);
         }
 
-        Persona IRepositorioPersona.UpdatePersona(Persona Persona)
+        Persona IRepositorioPersona.GetPersonaFind(int idPersona)
         {
-            var PersonaEncontrado = _appContext.Personas.FirstOrDefault(p => p.Id == Persona.Id);
+            return _appContext.Personas.Find(idPersona);
+        }
+
+        List<Persona> IRepositorioPersona.GetAllPersonasByGender(Genero genero, string tipoPersona){
+            return _appContext.Personas.Where(p => p.Genero == genero 
+                                                && p.Discriminator == tipoPersona).ToList();
+        }
+
+        Persona IRepositorioPersona.UpdatePersona(Persona persona)
+        {
+            var PersonaEncontrado = _appContext.Personas.FirstOrDefault(p => p.Id == persona.Id);
             if (PersonaEncontrado != null)
             {
-                PersonaEncontrado.Nombre = Persona.Nombre;
-                PersonaEncontrado.Apellidos = Persona.Apellidos;
-                PersonaEncontrado.NumeroTelefono = Persona.NumeroTelefono;
-                PersonaEncontrado.Genero = Persona.Genero;
-                PersonaEncontrado.Discriminator = Persona.Discriminator;
+                PersonaEncontrado.Nombre = persona.Nombre;
+                PersonaEncontrado.Apellidos = persona.Apellidos;
+                PersonaEncontrado.NumeroTelefono = persona.NumeroTelefono;
+                PersonaEncontrado.Genero = persona.Genero;
+                PersonaEncontrado.Discriminator = persona.Discriminator;
                 
                 _appContext.SaveChanges();
             }
             return PersonaEncontrado;
+        }
+
+        int IRepositorioPersona.UpdatePersonaFull(Persona persona){
+            _appContext.Personas.Update(persona);
+            return _appContext.SaveChanges();
         }
         
     }
