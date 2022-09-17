@@ -63,9 +63,16 @@
                                 <a class="btn bg-danger btn-block text-white">
                                     <i class="fas fa-trash-alt"></i> Eliminar
                                 </a>
-                                <a class="btn bg-warning btn-block">
-                                    <i class="fas fa-medkit"></i> Asignar Médico
-                                </a>
+                                @{
+                                  if(@persona.Discriminator == "Paciente"){
+                                    <a class="btn bg-warning btn-block">
+                                      <i class="fas fa-medkit"></i> Asignar Médico
+                                    </a>
+                                  }
+                                }
+                                <a class="btn bg-info btn-block text-white">
+                                    <i class="fas fa-heartbeat"></i> Detalles
+                                </a>                                
                             </td>
                         </tr>
                     }
@@ -305,7 +312,7 @@
                                 <option value="" selected="selected">Seleccione...</option>
                                 @foreach (var medico in Model.listadoMedicos)
                                 {
-                                  <option value="@medico.Id">@medico.Nombre @medico.Apellidos</option>  
+                                  <option value="@medico.Id">@medico.Nombre @medico.Apellidos - @medico.Especialidad </option>  
                                 }                                
                             </select>
                         </div>                                                                
@@ -318,6 +325,54 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" id="btnAsignarMedico">Asignar Medico</button>
+        <button type="reset" class="btn btn-secondary">Limpiar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Detalles -->
+<div class="modal" tabindex="-1" role="dialog" id="modalDetalle">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Detalles</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <form method="post" action="" id="formEditar">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" id="IdPaciente" name="IdPaciente">
+                        <table class="table" id="tableDetalle">
+                          <thead>
+                            <tr>
+                              <th>Fecha/Hora Registro</th>                              
+                              <th>Signo</th>
+                              <th>Valor</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td scope="row"></td>
+                              <td></td>
+                              <td></td>
+                            </tr>                            
+                          </tbody>
+                        </table>
+                    </form>
+                    <br>
+                    <br>
+                </div>
+            </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" id="btnCerrar">Cerrar</button>
         <button type="reset" class="btn btn-secondary">Limpiar</button>
       </div>
     </div>

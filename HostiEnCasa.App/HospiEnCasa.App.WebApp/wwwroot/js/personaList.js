@@ -4,6 +4,39 @@ $().ready(function(){
         $("#modalRegistrar").modal('show');
     });
 
+    $(document).on('click', '#tablePersonas tbody tr td a.btn.bg-info', function(){
+        
+        var IdPaciente = 0;
+
+        $(this).parent().parent().find('td').each(function(index){
+            switch(index){
+                case 0:
+                    IdPaciente = $(this).text();
+                    break;
+            }
+        });
+
+        //Cargar los datos
+        $.ajax({
+            type: "POST",
+            url: "/GestionPersonas/List?handler=ObtenerSignosVitales",
+            contentType: "application/x-www-form-urlencoded; charset=utf-8",
+            dataType: "json",
+            headers: {
+                "RequestVerificationToken": $('input:hidden[name="__RequestVerificationToken"]').val()
+            },
+            data: { "IdPaciente" : IdPaciente },
+        })
+        .done(function (result) {            
+            console.log(result);                
+        })
+        .fail(function (error) {
+            console.log("Código: " + error.status + ", Error: " + error.responseText);
+        });
+        
+        $('#modalDetalle').modal('show');
+    });
+
     $(document).on('click', '#tablePersonas tbody tr td a.btn.bg-warning', function(){
         
         $(this).parent().parent().find('td').each(function(index){
@@ -158,6 +191,8 @@ $().ready(function(){
                     alert(error);
                 });
 
+                break;
+
             case "Paciente" : 
 
                 var paciente = {
@@ -192,6 +227,8 @@ $().ready(function(){
                     console.log(result);
                     alert(error);
                 });
+
+                break;
                 
             case "Medico" : 
 
@@ -221,15 +258,20 @@ $().ready(function(){
                     console.log(result);
                     alert(result);                    
                     location.reload();
+                    //$('#modalMedico').modal('hide');
+                    //Agregar los datos al dom, o crear un ws que recargue el listado de la página
                 })
                 .fail(function (error) {
                     console.log(result);
                     alert(error);
                 });
+
+                break;
                 
             case "Enfermera" : 
-                
+                break;
             case "FamiliarDesignado" : 
+                break;
                 
         }
 

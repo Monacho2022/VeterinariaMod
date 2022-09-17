@@ -89,6 +89,24 @@ namespace HospiEnCasa.App.WebApp
 
             //Validar el objeto paciente que reciben via ajax
 
+            //Agregar relación de inserción
+            paciente.SignosVitales = new List<SignoVital>{
+                new SignoVital{ 
+                    FechaHora = new DateTime(2022, 09, 17),
+                    Valor = 95F,
+                    Signo = TipoSigno.SaturacionOxigeno
+                }
+            };
+            
+            //Utilizar en la actuliación
+            paciente.SignosVitales.Add( 
+                new SignoVital{ 
+                    FechaHora = new DateTime(2022, 09, 16),
+                    Valor = 38.5F,
+                    Signo = TipoSigno.TemperaturaCorporal
+                }
+            );
+
             var result = _repositorioPaciente.AddPaciente(paciente);
 
             if( result > 0){
@@ -181,6 +199,22 @@ namespace HospiEnCasa.App.WebApp
                 }
             }else{
                 return Content("No existe el médico o paciente");
+            }
+            
+        }
+
+        public IActionResult OnPostObtenerSignosVitales(string IdPaciente){
+
+            //Validar el objeto que reciben via ajax
+
+            var signos = _repositorioPaciente.GetSignosPaciente( Int32.Parse(IdPaciente) );
+
+            if(signos != null){                
+                
+                return new JsonResult(signos);
+
+            }else{
+                return null;
             }
             
         }
