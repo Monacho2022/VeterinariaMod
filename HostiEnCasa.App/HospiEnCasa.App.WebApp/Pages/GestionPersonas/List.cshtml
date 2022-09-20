@@ -3,7 +3,7 @@
 @{
     Layout = "_LayoutAdmin";
     ViewData["Title"] = "Listado de personas";
-    ViewData["script"] = "personaList.js";    
+    ViewData["script"] = "personaList.js";
 }
 <div class="container bg-white border border-secondary rounded-25">
     <div class="row">
@@ -68,11 +68,11 @@
                                     <a class="btn bg-warning btn-block">
                                       <i class="fas fa-medkit"></i> Asignar Médico
                                     </a>
+                                    <a class="btn bg-info btn-block text-white">
+                                        <i class="fas fa-heartbeat"></i> Ver Sigos Vitales
+                                    </a>
                                   }
-                                }
-                                <a class="btn bg-info btn-block text-white">
-                                    <i class="fas fa-heartbeat"></i> Detalles
-                                </a>                                
+                                }                                                                
                             </td>
                         </tr>
                     }
@@ -331,12 +331,12 @@
   </div>
 </div>
 
-<!-- Modal Detalles -->
-<div class="modal" tabindex="-1" role="dialog" id="modalDetalle">
+<!-- Modal Ver Signos Vitales -->
+<div class="modal" tabindex="-1" role="dialog" id="modalVerSignos">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Detalles</h5>
+        <h5 class="modal-title">Detalle Signos vitales</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -347,8 +347,7 @@
                 <div class="col">
                     <form method="post" action="" id="formEditar">
                         @Html.AntiForgeryToken()
-                        <input type="hidden" id="IdPaciente" name="IdPaciente">
-                        <table class="table" id="tableDetalle">
+                        <table class="table" id="tableDetalleSignos">
                           <thead>
                             <tr>
                               <th>Fecha/Hora Registro</th>                              
@@ -357,11 +356,7 @@
                             </tr>
                           </thead>
                           <tbody>
-                            <tr>
-                              <td scope="row"></td>
-                              <td></td>
-                              <td></td>
-                            </tr>                            
+                                                       
                           </tbody>
                         </table>
                     </form>
@@ -372,8 +367,7 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary" id="btnCerrar">Cerrar</button>
-        <button type="reset" class="btn btn-secondary">Limpiar</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>        
       </div>
     </div>
   </div>

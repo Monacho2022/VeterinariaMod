@@ -89,6 +89,16 @@ namespace HostiEnCasa.App.Persistencia
             return paciente.SignosVitales;
         }
 
+        Paciente IRepositorioPaciente.GetSignosPacienteOnly(int idPaciente){
+
+            var paciente = _appContext.Pacientes
+                        .Where( p => p.Id == idPaciente)
+                        .Include( p => p.SignosVitales)
+                        .FirstOrDefault();
+            
+            return paciente;
+        }
+
         List<SignoVital> IRepositorioPaciente.GetSignosPacienteQuery(int idPaciente){
             
             var signosVitales = from paciente in _appContext.Pacientes

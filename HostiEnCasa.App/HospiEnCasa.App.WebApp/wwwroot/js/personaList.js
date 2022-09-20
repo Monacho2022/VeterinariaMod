@@ -1,5 +1,13 @@
 $().ready(function(){
     
+    const TipoSignos = {
+        TensionArterial : 1,
+        FrecuenciaCardica : 2,
+        FrecuenciaRespiratoria : 3,
+        SaturacionOxigeno : 4,
+        TemperaturaCorporal : 5
+    };
+
     $("#crearPersona").click(function(){
         $("#modalRegistrar").modal('show');
     });
@@ -16,7 +24,6 @@ $().ready(function(){
             }
         });
 
-        //Cargar los datos
         $.ajax({
             type: "POST",
             url: "/GestionPersonas/List?handler=ObtenerSignosVitales",
@@ -28,13 +35,38 @@ $().ready(function(){
             data: { "IdPaciente" : IdPaciente },
         })
         .done(function (result) {            
-            console.log(result);                
+            console.log(result);
+            
+            $("#tableDetalleSignos > tbody").html("");
+
+            if(result.length > 0){
+
+                result.forEach( signo => {
+                    
+                    var signoNombre = "";
+
+                    switch(signo.signo){
+                        case 0: signoNombre = "TensionArterial"; break;
+                        case 1: signoNombre = "FrecuenciaCardica"; break;
+                        case 2: signoNombre = "FrecuenciaRespiratoria"; break;
+                        case 3: signoNombre = "SaturacionOxigeno"; break;
+                        case 4: signoNombre = "TemperaturaCorporal"; break;
+                    }
+                    //Limpie la tabla antes de añadir datos
+                    
+                    $("#tableDetalleSignos>tbody").append("<tr> <td>"+signo.fechaHora+"</td> <td>"+signoNombre+"</td> <td>"+signo.valor+"</td> </tr>");
+                });
+
+            }
+            
+            $('#modalVerSignos').modal('show');
+
         })
         .fail(function (error) {
             console.log("Código: " + error.status + ", Error: " + error.responseText);
+            alert("Código: " + error.status + ", Error: " + error.responseText);
         });
         
-        $('#modalDetalle').modal('show');
     });
 
     $(document).on('click', '#tablePersonas tbody tr td a.btn.bg-warning', function(){

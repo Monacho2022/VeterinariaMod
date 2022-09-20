@@ -209,10 +209,8 @@ namespace HospiEnCasa.App.WebApp
 
             var signos = _repositorioPaciente.GetSignosPaciente( Int32.Parse(IdPaciente) );
 
-            if(signos != null){                
-                
+            if(signos != null){     
                 return new JsonResult(signos);
-
             }else{
                 return null;
             }

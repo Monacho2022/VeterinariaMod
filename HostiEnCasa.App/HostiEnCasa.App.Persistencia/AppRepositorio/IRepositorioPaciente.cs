@@ -15,6 +15,7 @@ namespace HostiEnCasa.App.Persistencia
         Medico AsignarMedico(int idPaciente, int idMedico);
         List<Paciente> GetPacienteSignoFrecuencia();
         List<SignoVital> GetSignosPaciente(int idPaciente);
+        Paciente GetSignosPacienteOnly(int idPaciente);
         List<SignoVital> GetSignosPacienteQuery(int idPaciente);
         int AsignarMedicoDirecto(Paciente paciente);
     }
