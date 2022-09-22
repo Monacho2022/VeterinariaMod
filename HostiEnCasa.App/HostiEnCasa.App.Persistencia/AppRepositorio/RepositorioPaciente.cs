@@ -116,6 +116,26 @@ namespace HostiEnCasa.App.Persistencia
             return signosVitales.ToList();            
         }
 
+        List<ReportePaciente> IRepositorioPaciente.ReportSignosPaciente(int idPaciente){
+            
+            var report = from paciente in _appContext.Pacientes
+                        join signos in _appContext.SignosVitales
+                        on paciente.Id equals signos.PacienteId
+                        where 
+                        paciente.Id == idPaciente
+                        select new ReportePaciente {
+                            Id = paciente.Id,
+                            Nombre = paciente.Nombre,
+                            Apellidos = paciente.Apellidos,
+                            NumeroTelefono = paciente.NumeroTelefono,
+                            FechaHora = signos.FechaHora,
+                            Valor = signos.Valor,
+                            Signo = signos.Signo                                    
+                        };
+
+            return report.ToList();            
+        }
+
         Medico IRepositorioPaciente.AsignarMedico(int idPaciente, int idMedico)
         {
             var pacienteEncontrado = _appContext.Pacientes.FirstOrDefault(p => p.Id == idPaciente);

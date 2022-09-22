@@ -57,19 +57,22 @@
                                     <i class="far fa-edit"></i>Editar
                                 </a>
                                 -->
-                                <a class="btn btn-primary btn-block text-white">
-                                    <i class="far fa-edit"></i> Editar
+                                <a class="btn btn-primary text-white" data-toggle="tooltip" data-placement="top" title="Editar una persona">
+                                    <i class="far fa-edit"></i>
                                 </a>
-                                <a class="btn bg-danger btn-block text-white">
-                                    <i class="fas fa-trash-alt"></i> Eliminar
+                                <a class="btn bg-danger text-white" data-toggle="tooltip" data-placement="top" title="Eliminar una persona">
+                                    <i class="fas fa-trash-alt"></i>
                                 </a>
                                 @{
                                   if(@persona.Discriminator == "Paciente"){
-                                    <a class="btn bg-warning btn-block">
-                                      <i class="fas fa-medkit"></i> Asignar Médico
+                                    <a class="btn bg-warning" data-toggle="tooltip" data-placement="top" title="Asignar un médico al paciente">
+                                      <i class="fas fa-medkit"></i>
                                     </a>
-                                    <a class="btn bg-info btn-block text-white">
-                                        <i class="fas fa-heartbeat"></i> Ver Sigos Vitales
+                                    <a class="btn bg-info text-white" data-toggle="tooltip" data-placement="top" title="Visualizar signos vitales">
+                                        <i class="fas fa-heartbeat"></i>
+                                    </a>
+                                    <a class="btn bg-success text-white" data-toggle="tooltip" data-placement="top" title="Ingresar signos vitales">
+                                        <i class="fas fa-procedures"></i>
                                     </a>
                                   }
                                 }                                                                
@@ -368,6 +371,74 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>        
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Ingresar Signos Vitales -->
+<div class="modal" tabindex="-1" role="dialog" id="modalIngresarSignos">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Ingresar Signos vitales</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <form method="post" action="" id="formEditar">
+                        <input type="hidden" id="IdPacienteSigno" name="IdPacienteSigno">
+                        <div class="form-group">
+                            <label for="nombre">Fecha/hora</label>
+                            <input type="date" class="form-control" id="fechaHora" name="fechaHora">
+                        </div>
+                        @using HostiEnCasa.App.Dominio
+                        <div class="form-group">
+                            <label for="nombre">Tipo de Signo</label>
+                            <select class="form-control" id="tipoSigno" name="tipoSigno">
+                                <option value="" selected="selected">Seleccione...</option>
+                                <option value="@TipoSigno.TensionArterial">Tensión Arterial</option>
+                                <option value="@TipoSigno.FrecuenciaCardica">Frecuencia Cardica</option>
+                                <option value="@TipoSigno.FrecuenciaRespiratoria">Frecuencia Respiratoria</option>
+                                <option value="@TipoSigno.SaturacionOxigeno">Saturación Oxigeno</option>
+                                <option value="@TipoSigno.TemperaturaCorporal">Temperatura Corporal</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="nombre">Valor signo</label>
+                            <input type="number" class="form-control" id="valorSigno" name="valorSigno">
+                        </div>
+                        <div class="form-group">
+                          <button type="button" class="btn bg-success" id="btnAgregarSigno">Agregar</button>
+                        </div>
+                        
+                        @Html.AntiForgeryToken()
+                        <table class="table" id="tableAgregarSignos">
+                          <thead>
+                            <tr>
+                              <th>Fecha/Hora Registro</th>                              
+                              <th>Signo</th>
+                              <th>Valor</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                                                       
+                          </tbody>
+                        </table>
+                    </form>
+                    <br>
+                    <br>
+                </div>
+            </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" id="btnGuardarSignos">Guardar signos</button>        
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>        
       </div>
     </div>
   </div>

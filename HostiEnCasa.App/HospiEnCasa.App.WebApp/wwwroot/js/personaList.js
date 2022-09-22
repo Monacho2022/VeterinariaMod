@@ -1,5 +1,8 @@
 $().ready(function(){
     
+    $("#tablePersonas").DataTable();
+    $('[data-toggle="tooltip"]').tooltip();
+
     const TipoSignos = {
         TensionArterial : 1,
         FrecuenciaCardica : 2,
@@ -10,6 +13,11 @@ $().ready(function(){
 
     $("#crearPersona").click(function(){
         $("#modalRegistrar").modal('show');
+    });
+
+    $(document).on('click', '#tablePersonas tbody tr td a.btn.bg-success', function(){
+        $("#tableAgregarSignos > tbody").html("");
+        $("#modalIngresarSignos").modal('show');
     });
 
     $(document).on('click', '#tablePersonas tbody tr td a.btn.bg-info', function(){
@@ -52,9 +60,8 @@ $().ready(function(){
                         case 3: signoNombre = "SaturacionOxigeno"; break;
                         case 4: signoNombre = "TemperaturaCorporal"; break;
                     }
-                    //Limpie la tabla antes de añadir datos
                     
-                    $("#tableDetalleSignos>tbody").append("<tr> <td>"+signo.fechaHora+"</td> <td>"+signoNombre+"</td> <td>"+signo.valor+"</td> </tr>");
+                    $("#tableDetalleSignos > tbody").append("<tr> <td>"+signo.fechaHora+"</td> <td>"+signoNombre+"</td> <td>"+signo.valor+"</td> </tr>");
                 });
 
             }
@@ -355,6 +362,16 @@ $().ready(function(){
             alert("Código: " + error.status + ", Error: " + error.responseText);
         });
 
+    });
+
+    $("#btnAgregarSigno").click(function(){
+        //Leer datos del formulario
+        
+        var fechaHora = $("#fechaHora").val();
+        var signo = $("#tipoSigno").val();
+        var valor = $("#valorSigno").val();
+
+        $("#tableAgregarSignos > tbody").append("<tr> <td>"+fechaHora+"</td> <td>"+signo+"</td> <td>"+valor+"</td> </tr>");
     });
 
 });
