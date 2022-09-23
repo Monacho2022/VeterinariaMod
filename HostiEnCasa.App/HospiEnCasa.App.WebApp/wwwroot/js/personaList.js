@@ -17,7 +17,20 @@ $().ready(function(){
 
     $(document).on('click', '#tablePersonas tbody tr td a.btn.bg-success', function(){
         $("#tableAgregarSignos > tbody").html("");
-        $("#modalIngresarSignos").modal('show');
+
+        var IdPaciente = 0;
+
+        $(this).parent().parent().find('td').each(function(index){
+            switch(index){
+                case 0:
+                    IdPaciente = $(this).text();
+                    break;
+            }
+        });
+
+        $("#IdPacienteSigno").val(IdPaciente);
+
+        $("#modalAgregarSignos").modal('show');
     });
 
     $(document).on('click', '#tablePersonas tbody tr td a.btn.bg-info', function(){
@@ -365,13 +378,103 @@ $().ready(function(){
     });
 
     $("#btnAgregarSigno").click(function(){
-        //Leer datos del formulario
-        
+        //Leer datos del formulario        
         var fechaHora = $("#fechaHora").val();
         var signo = $("#tipoSigno").val();
         var valor = $("#valorSigno").val();
 
+        //Validar si esta vacio
+        if( fechaHora.trim() == ""){
+            alert("Debe seleccionar una fecha");
+            $("#fechaHora").focus();
+            return;
+        }
+        if( signo.trim() == ""){
+            alert("Debe seleccionar una signo vital");
+            $("#tipoSigno").focus();
+            return;
+        }
+        if( valor.trim() == ""){
+            alert("Debe digitar el valor del signo vital");
+            $("#valorSigno").focus();
+            return;
+        }
+
         $("#tableAgregarSignos > tbody").append("<tr> <td>"+fechaHora+"</td> <td>"+signo+"</td> <td>"+valor+"</td> </tr>");
+
+        //Limpiar el formulario
+        $("#fechaHora").val("");
+        $("#tipoSigno").val("");
+        $("#valorSigno").val("");
+
+        $("#fechaHora").focus();
+
+    });
+
+    $("#btnGuardarSignos").click(function(){
+
+        var listaSignos = [];
+
+        $("#tableAgregarSignos > tbody").find('tr').each(function(index){
+            
+            //console.log($(this).text());
+
+            var fecha = "";
+            var signo = 0;
+            var valor = 0;
+            
+            $.each(this.cells, function(index2){
+                //console.log($(this).text());
+                switch(index2){
+                    case 0: fecha = $(this).text(); break;
+                    case 1: 
+                        
+                        switch($(this).text()){
+                            case "TensionArterial": signo = 0; break;
+                            case "FrecuenciaCardica": signo = 1; break;
+                            case "FrecuenciaRespiratoria": signo = 2; break;
+                            case "SaturacionOxigeno": signo = 3; break;
+                            case "TemperaturaCorporal": signo = 4; break;
+                        }
+
+                        break;
+                    case 2: valor = $(this).text(); break;
+                }
+            });
+
+            var signoVital = {
+                "FechaHora" : fecha,
+                "Valor" : valor,
+                "Signo" : signo,
+                "PacienteId" : $("#IdPacienteSigno").val()
+            };
+
+            listaSignos.push(signoVital);
+
+        });        
+
+        console.log(listaSignos);
+        
+        $.ajax({
+            type: "POST",
+            url: "/GestionPersonas/List?handler=AgregarSignos",
+            contentType: "application/json; charset=utf-8",
+            dataType: "html",
+            headers: {
+                "RequestVerificationToken": $('input:hidden[name="__RequestVerificationToken"]').val()
+            },
+            data: JSON.stringify(listaSignos),
+        })
+        .done(function (result) {
+            console.log(result);
+            alert(result);                    
+            location.reload();
+        })
+        .fail(function (error) {
+            console.log(result);
+            alert(error);
+        });
+
     });
 
 });

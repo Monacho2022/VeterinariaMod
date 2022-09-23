@@ -217,5 +217,39 @@ namespace HospiEnCasa.App.WebApp
             
         }
 
+        public IActionResult OnPostAgregarSignos([FromBody]List<SignoVital> listado){
+
+            //Validar el objeto que reciben via ajax
+            var IdPaciente = 0;
+            
+            foreach (var signo in listado)
+            {
+                IdPaciente = signo.PacienteId;
+                break;
+            }
+
+            var paciente = _repositorioPaciente.GetPaciente(IdPaciente);
+
+            if( paciente != null){
+
+                if( paciente.SignosVitales.Count > 0 ){
+                    paciente.SignosVitales.AddRange(listado);
+                }else{
+                    paciente.SignosVitales = listado;
+                }
+
+                var result = _repositorioPaciente.Update(paciente);
+
+                if( result > 0 )
+                    return Content("Se agregaron los signos vitales con exito");
+                else
+                    return Content("No se logro agregar los signos vitales");
+
+            }else{
+                return Content("El paciente no existe");
+            }
+            
+        }
+
     }
 }

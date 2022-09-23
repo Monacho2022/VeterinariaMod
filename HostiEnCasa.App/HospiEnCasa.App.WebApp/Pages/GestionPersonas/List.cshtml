@@ -71,7 +71,7 @@
                                     <a class="btn bg-info text-white" data-toggle="tooltip" data-placement="top" title="Visualizar signos vitales">
                                         <i class="fas fa-heartbeat"></i>
                                     </a>
-                                    <a class="btn bg-success text-white" data-toggle="tooltip" data-placement="top" title="Ingresar signos vitales">
+                                    <a class="btn bg-success text-white" data-toggle="tooltip" data-placement="top" title="Agregar signos vitales">
                                         <i class="fas fa-procedures"></i>
                                     </a>
                                   }
@@ -376,12 +376,12 @@
   </div>
 </div>
 
-<!-- Modal Ingresar Signos Vitales -->
-<div class="modal" tabindex="-1" role="dialog" id="modalIngresarSignos">
+<!-- Modal Agregar Signos Vitales -->
+<div class="modal" tabindex="-1" role="dialog" id="modalAgregarSignos">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Ingresar Signos vitales</h5>
+        <h5 class="modal-title">Agregar Signos vitales</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -393,7 +393,7 @@
                     <form method="post" action="" id="formEditar">
                         <input type="hidden" id="IdPacienteSigno" name="IdPacienteSigno">
                         <div class="form-group">
-                            <label for="nombre">Fecha/hora</label>
+                            <label for="nombre">Fecha</label>
                             <input type="date" class="form-control" id="fechaHora" name="fechaHora">
                         </div>
                         @using HostiEnCasa.App.Dominio
@@ -409,18 +409,18 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="nombre">Valor signo</label>
-                            <input type="number" class="form-control" id="valorSigno" name="valorSigno">
+                            <label for="nombre">Valor</label>
+                            <input type="number" class="form-control" id="valorSigno" name="valorSigno" min="0" max="250">
                         </div>
                         <div class="form-group">
-                          <button type="button" class="btn bg-success" id="btnAgregarSigno">Agregar</button>
+                          <button type="button" class="btn bg-success text-white" id="btnAgregarSigno" data-toggle="tooltip" data-placement="top" title="Agregar signo vital a la tabla" ><i class="fas fa-plus"></i></button>
                         </div>
                         
                         @Html.AntiForgeryToken()
                         <table class="table" id="tableAgregarSignos">
                           <thead>
                             <tr>
-                              <th>Fecha/Hora Registro</th>                              
+                              <th>Fecha Toma</th>                              
                               <th>Signo</th>
                               <th>Valor</th>
                             </tr>
@@ -437,7 +437,7 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary" id="btnGuardarSignos">Guardar signos</button>        
+        <button type="button" class="btn btn-primary" id="btnGuardarSignos">Agregar signos</button>        
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>        
       </div>
     </div>

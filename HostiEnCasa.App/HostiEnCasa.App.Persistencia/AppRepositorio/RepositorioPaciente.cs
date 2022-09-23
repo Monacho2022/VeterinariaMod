@@ -42,13 +42,11 @@ namespace HostiEnCasa.App.Persistencia
             return _appContext.Pacientes;
         }
 
-        Paciente IRepositorioPaciente.GetPaciente(int idPaciente)
-        {
+        Paciente IRepositorioPaciente.GetPaciente(int idPaciente){
             return _appContext.Pacientes.Include( p => p.SignosVitales ).FirstOrDefault(p => p.Id == idPaciente);
         }
 
-        int IRepositorioPaciente.UpdatePaciente(Paciente paciente)
-        {
+        int IRepositorioPaciente.UpdatePaciente(Paciente paciente){
             var pacienteEncontrado = _appContext.Pacientes.FirstOrDefault(p => p.Id == paciente.Id);
 
             if (pacienteEncontrado != null)
@@ -136,8 +134,7 @@ namespace HostiEnCasa.App.Persistencia
             return report.ToList();            
         }
 
-        Medico IRepositorioPaciente.AsignarMedico(int idPaciente, int idMedico)
-        {
+        Medico IRepositorioPaciente.AsignarMedico(int idPaciente, int idMedico){
             var pacienteEncontrado = _appContext.Pacientes.FirstOrDefault(p => p.Id == idPaciente);
             if (pacienteEncontrado != null)
             {
@@ -153,8 +150,12 @@ namespace HostiEnCasa.App.Persistencia
 
         }
 
-        int IRepositorioPaciente.AsignarMedicoDirecto(Paciente paciente)
-        {
+        int IRepositorioPaciente.AsignarMedicoDirecto(Paciente paciente){
+            _appContext.Pacientes.Update(paciente);
+            return _appContext.SaveChanges();
+        }
+
+        int IRepositorioPaciente.Update(Paciente paciente){
             _appContext.Pacientes.Update(paciente);
             return _appContext.SaveChanges();
         }
