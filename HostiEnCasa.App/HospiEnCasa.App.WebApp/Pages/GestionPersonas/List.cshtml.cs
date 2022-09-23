@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using HostiEnCasa.App.Dominio;
 using HostiEnCasa.App.Persistencia;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Session;
 
 namespace HospiEnCasa.App.WebApp
 {
@@ -18,14 +20,21 @@ namespace HospiEnCasa.App.WebApp
         public List<Persona> listadoPersonas { get; set;}
         public List<Medico> listadoMedicos { get; set;}
         public string mensaje;
+        public string _sessionUsuario = "_usuario";
 
-        //protected List();
-
-        /*
-        public List(){
+        public ListModel(IHttpContextAccessor httpContextAccessor){
             //Validar el rol que tenga y determinar si puede ver la página o no
             //return RedirectToPage("./Home");
-        }*/
+            Console.WriteLine("Constructor List"); 
+
+            if (string.IsNullOrEmpty(httpContextAccessor.HttpContext.Session.GetString(_sessionUsuario)))
+            {
+                Console.WriteLine("List, No existe la variable "+_sessionUsuario);                
+            }else{
+                Console.WriteLine("List, " + _sessionUsuario+": " + httpContextAccessor.HttpContext.Session.GetString(_sessionUsuario));
+            }
+
+        }
 
         public void OnGet()
         {
@@ -38,6 +47,11 @@ namespace HospiEnCasa.App.WebApp
                 mensaje = ViewData["mensaje"].ToString();
             else
                 mensaje = "";
+
+            HttpContext.Session.SetInt32("Test Int", 1);
+            HttpContext.Session.Set("Test Byte Array", BitConverter.GetBytes(true));
+            HttpContext.Session.Remove("Name");
+            HttpContext.Session.Clear();
         }
 
         public IActionResult OnPostUpdateJson([FromBody]Persona persona)
