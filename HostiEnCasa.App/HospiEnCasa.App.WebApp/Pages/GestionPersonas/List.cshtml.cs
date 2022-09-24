@@ -20,28 +20,32 @@ namespace HospiEnCasa.App.WebApp
         public List<Persona> listadoPersonas { get; set;}
         public List<Medico> listadoMedicos { get; set;}
         public string mensaje;
-        public string _sessionUsuario = "_usuario";
+        public string _sessionIdUser = "_idUser";
+        public string _sessionIdRol = "_idRol";
+        private IHttpContextAccessor _httpContextAccessor;
 
         public ListModel(IHttpContextAccessor httpContextAccessor){
             //Validar el rol que tenga y determinar si puede ver la página o no
             //return RedirectToPage("./Home");
             Console.WriteLine("Constructor List"); 
-
-            if (string.IsNullOrEmpty(httpContextAccessor.HttpContext.Session.GetString(_sessionUsuario)))
-            {
-                Console.WriteLine("List, No existe la variable "+_sessionUsuario);                
-            }else{
-                Console.WriteLine("List, " + _sessionUsuario+": " + httpContextAccessor.HttpContext.Session.GetString(_sessionUsuario));
-            }
-
+            _httpContextAccessor = httpContextAccessor;
         }
 
-        public void OnGet()
+        public IActionResult OnGet()
         {
             listadoPersonas = new List<Persona>();
             listadoPersonas = _personaRepository.ObtenerTodo();
             listadoMedicos = new List<Medico>();
             listadoMedicos = _repositorioMedico.GetAllMedicos();
+
+            if( string.IsNullOrEmpty( _httpContextAccessor.HttpContext.Session.GetString(_sessionIdUser) ) 
+                || string.IsNullOrEmpty( _httpContextAccessor.HttpContext.Session.GetString(_sessionIdRol) ) ){                
+                Console.WriteLine("Acceso ilegal no esta logueado");
+                return RedirectToPage("/Login");
+            }else{
+                Console.WriteLine("Tiene permiso");
+                return Page();
+            }
 
             if(ViewData["mensaje"] != null)
                 mensaje = ViewData["mensaje"].ToString();

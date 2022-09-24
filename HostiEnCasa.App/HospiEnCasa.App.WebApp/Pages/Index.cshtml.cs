@@ -13,19 +13,30 @@ namespace HospiEnCasa.App.WebApp.Pages
     public class IndexModel : PageModel
     {
         private readonly ILogger<IndexModel> _logger;
-        public string _sessionUsuario = "_usuario";
+        public string _sessionIdUser = "_idUser";
+        public string _sessionIdRol = "_idRol";
+        private IHttpContextAccessor _httpContextAccessor;
 
         public IndexModel(ILogger<IndexModel> logger, IHttpContextAccessor httpContextAccessor)
         {
             _logger = logger;
+            _httpContextAccessor = httpContextAccessor;
             Console.WriteLine("Constructor Index");    
-            httpContextAccessor.HttpContext.Session.SetString(_sessionUsuario, "Creado desde index");
-            Console.WriteLine(httpContextAccessor.HttpContext.Session.GetString(_sessionUsuario));
+            Console.WriteLine("Index, Contenido idUser: " + _httpContextAccessor.HttpContext.Session.GetString(_sessionIdUser) );
+            Console.WriteLine("Index, Contenido idRol: " + _httpContextAccessor.HttpContext.Session.GetString(_sessionIdRol) );
+            
         }
 
-        public void OnGet()
+        public IActionResult OnGet()
         {
-
+            if( string.IsNullOrEmpty( _httpContextAccessor.HttpContext.Session.GetString(_sessionIdUser) ) 
+                || string.IsNullOrEmpty( _httpContextAccessor.HttpContext.Session.GetString(_sessionIdRol) ) ){                
+                Console.WriteLine("Acceso ilegal no esta logueado");
+                return RedirectToPage("/Login");
+            }else{
+                Console.WriteLine("Tiene permiso");
+                return Page();
+            }
         }
     }
 }

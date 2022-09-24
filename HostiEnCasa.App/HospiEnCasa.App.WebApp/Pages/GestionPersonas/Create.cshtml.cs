@@ -17,21 +17,26 @@ namespace HospiEnCasa.App.WebApp
         private IPersonaRepository _personaRepository = new PersonaRepository( new HostiEnCasa.App.Persistencia.AppContext() );
         private IRepositorioPaciente _pacienteRepository = new RepositorioPaciente( new HostiEnCasa.App.Persistencia.AppContext() );
         public List<Persona> listadoPersonas { get; set;}
-        public string _sessionUsuario = "_usuario";
+        public string _sessionIdUser = "_idUser";
+        public string _sessionIdRol = "_idRol";
+        private IHttpContextAccessor _httpContextAccessor;
 
         public CreateModel(IHttpContextAccessor httpContextAccessor){
             Console.WriteLine("Constructor Create"); 
-
-            if (string.IsNullOrEmpty(httpContextAccessor.HttpContext.Session.GetString(_sessionUsuario)))
-            {
-                Console.WriteLine("Create, No existe la variable "+_sessionUsuario);                
-            }else{
-                Console.WriteLine("Create, " + _sessionUsuario+": " + httpContextAccessor.HttpContext.Session.GetString(_sessionUsuario));
-            }
+            _httpContextAccessor = httpContextAccessor;
         }
 
-        public void OnGet()
+        public IActionResult OnGet()
         {
+            if( string.IsNullOrEmpty( _httpContextAccessor.HttpContext.Session.GetString(_sessionIdUser) ) 
+                || string.IsNullOrEmpty( _httpContextAccessor.HttpContext.Session.GetString(_sessionIdRol) ) ){                
+                Console.WriteLine("Acceso ilegal no esta logueado");
+                return RedirectToPage("/Login");
+            }else{
+                Console.WriteLine("Tiene permiso");
+                return Page();
+            }
+
             listadoPersonas = new List<Persona>();
             listadoPersonas = _personaRepository.ObtenerTodo();
         }
